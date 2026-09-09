@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DONGWAL PLAYER - Cyber-edition Stream</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0a12'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='%2300f0ff' font-family='monospace' font-weight='bold'>PW</text></svg>">
+  <meta name="theme-color" content="#0a0a12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/player.css">
+</head>
+<body>
+  <div class="scanlines"></div>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="/">DONGWAL <span style="display:block;font-size:0.6rem;letter-spacing:5px;font-weight:400;-webkit-text-fill-color:var(--text-secondary);font-family:'Share Tech Mono',monospace">PLAYER MODULE</span></a>
+      <a class="nav-back" href="/">&lt;&lt; BACK TO DASHBOARD</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="player-title" id="player-title">ESTABLISHING NEURAL LINK...</div>
+    <div class="player-stage">
+      <div class="loading-screen" id="loading">LOADING STREAM SOURCE</div>
+      <iframe id="player-frame" style="display:none" frameborder="0" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
+      <video id="player-video" style="display:none" controls autoplay playsinline></video>
+      <div class="no-stream" id="no-stream" style="display:none">NO STREAM AVAILABLE<br><small>TRY ANOTHER SOURCE OR LATER</small></div>
+    </div>
+
+    <div class="embed-tabs" id="embed-tabs"></div>
+
+    <div class="player-toolbar">
+      <a class="tool-btn" id="btn-prev" style="display:none" href="#">&lt;&lt; PREV EP</a>
+      <a class="tool-btn" id="btn-series" style="display:none" href="#" target="_self">SERIES INFO</a>
+      <a class="tool-btn mag" id="btn-next" style="display:none" href="#">NEXT EP &gt;&gt;</a>
+      <button class="tool-btn grn" id="btn-newtab" onclick="openNewTab()">OPEN IN NEW TAB</button>
+    </div>
+
+    <div id="download-section"></div>
+  </main>
+
+  <div class="status-bar">
+    <div><span class="status-dot"></span>DONGWAL v<%= version %> // STREAM ONLINE</div>
+    <div class="status-bar-right">CODEC: <a href="/" id="slug-label">AUTO-DETECT</a></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script>
+    window.__DW_CONFIG__ = { version: "<%= version %>", slug: <%- JSON.stringify(slug) %>, sources: <%- JSON.stringify(sources) %> };
+  </script>
+  <script src="/js/player.js"></script>
+</body>
+</html>
