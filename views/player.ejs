@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DONGWAL PLAYER - Cyber-edition Stream</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0a12'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='%2300f0ff' font-family='monospace' font-weight='bold'>PW</text></svg>">
+  <meta name="theme-color" content="#0a0a12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    :root{
+      --neon-cyan:#00f0ff;--neon-magenta:#ff00de;--neon-yellow:#f0ff00;
+      --neon-green:#39ff14;--neon-orange:#ff6a00;--neon-red:#ff003c;
+      --bg-dark:#0a0a12;--bg-card:#12121e;--bg-card-hover:#1a1a2e;
+      --text-primary:#e0e0ff;--text-secondary:#8888aa;
+      --border-glow:rgba(0,240,255,0.3);
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Rajdhani',sans-serif;background:var(--bg-dark);color:var(--text-primary);
+      min-height:100vh;overflow-x:hidden;
+    }
+    body::before{
+      content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+      background:
+        repeating-linear-gradient(0deg,transparent,transparent 50px,rgba(0,240,255,0.03) 50px,rgba(0,240,255,0.03) 51px),
+        repeating-linear-gradient(90deg,transparent,transparent 50px,rgba(0,240,255,0.03) 50px,rgba(0,240,255,0.03) 51px);
+      pointer-events:none;z-index:0;
+    }
+    .scanlines{
+      position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,0.15) 0px,rgba(0,0,0,0.15) 1px,transparent 1px,transparent 2px);
+      opacity:0.4;
+    }
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0a12}
+    ::-webkit-scrollbar-thumb{background:var(--neon-magenta);border-radius:3px}
+
+    header{
+      position:relative;z-index:10;background:linear-gradient(180deg,#0d0d1a 0%,transparent 100%);
+      border-bottom:1px solid var(--border-glow);padding:16px 0;
+    }
+    .header-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .logo{
+      font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;text-decoration:none;
+      background:linear-gradient(135deg,var(--neon-magenta),var(--neon-cyan));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      letter-spacing:3px;
+    }
+    .nav-back{
+      font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+      background:transparent;border:1px solid var(--border-glow);color:var(--neon-cyan);
+      padding:8px 16px;border-radius:2px;cursor:pointer;text-decoration:none;letter-spacing:1px;text-transform:uppercase;
+      transition:all 0.3s;
+    }
+    .nav-back:hover{background:rgba(0,240,255,0.1);border-color:var(--neon-cyan);box-shadow:0 0 15px rgba(0,240,255,0.3)}
+
+    main{max-width:1200px;margin:0 auto;padding:24px 20px 80px;position:relative;z-index:10}
+
+    .player-title{
+      font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--neon-magenta);
+      margin-bottom:14px;text-shadow:0 0 15px rgba(255,0,222,0.3);
+    }
+    .player-stage{
+      position:relative;background:#000;border:2px solid var(--border-glow);border-radius:6px;
+      aspect-ratio:16/9;overflow:hidden;box-shadow:0 0 50px rgba(0,240,255,0.2);
+    }
+    .player-stage iframe{width:100%;height:100%;border:none;display:block}
+    .player-stage video{width:100%;height:100%;display:block;background:#000}
+    .player-stage .no-stream{
+      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      font-family:'Orbitron',sans-serif;color:var(--neon-magenta);text-align:center;
+    }
+    .loading-screen{
+      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      font-family:'Share Tech Mono',monospace;color:var(--neon-cyan);background:#000;
+    }
+    .loading-screen::after{
+      content:'';width:50px;height:50px;margin-top:16px;
+      border:3px solid transparent;border-top-color:var(--neon-cyan);border-right-color:var(--neon-magenta);
+      border-radius:50%;animation:spin 0.8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .embed-tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
+    .embed-tab{
+      font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+      padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-glow);
+      color:var(--text-secondary);cursor:pointer;transition:all 0.3s;border-radius:2px;
+    }
+    .embed-tab.active,.embed-tab:hover{color:var(--neon-cyan);border-color:var(--neon-cyan);background:rgba(0,240,255,0.1);box-shadow:0 0 10px rgba(0,240,255,0.2)}
+    .embed-tab.grn{border-color:rgba(57,255,20,0.4);color:var(--neon-green)}
+    .embed-tab.grn:hover{background:rgba(57,255,20,0.1);border-color:var(--neon-green)}
+
+    .player-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+    .tool-btn{
+      font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+      padding:10px 20px;background:transparent;border:1px solid var(--border-glow);
+      color:var(--neon-cyan);cursor:pointer;transition:all 0.3s;border-radius:2px;text-decoration:none;letter-spacing:1px;text-transform:uppercase;
+    }
+    .tool-btn:hover{background:rgba(0,240,255,0.1);border-color:var(--neon-cyan);box-shadow:0 0 12px rgba(0,240,255,0.2)}
+    .tool-btn.mag{border-color:rgba(255,0,222,0.4);color:var(--neon-magenta)}
+    .tool-btn.mag:hover{background:rgba(255,0,222,0.1);border-color:var(--neon-magenta);box-shadow:0 0 12px rgba(255,0,222,0.2)}
+    .tool-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+    .section-title{
+      font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--neon-cyan);
+      text-transform:uppercase;letter-spacing:3px;margin:28px 0 14px;padding-bottom:10px;
+      border-bottom:1px solid var(--border-glow);display:flex;align-items:center;gap:10px;
+    }
+    .section-title::before{content:'//';color:var(--neon-magenta)}
+    .api-endpoint{
+      background:var(--bg-card);border:1px solid rgba(0,240,255,0.1);
+      padding:10px 14px;border-radius:2px;margin-bottom:8px;
+      font-family:'Share Tech Mono',monospace;font-size:0.8rem;
+    }
+    .api-endpoint .method{color:var(--neon-green);font-weight:700}
+    .api-endpoint a{color:var(--neon-cyan);margin-left:8px;text-decoration:none}
+
+    .status-bar{
+      position:fixed;bottom:0;left:0;width:100%;
+      background:rgba(10,10,18,0.95);border-top:1px solid var(--border-glow);
+      padding:8px 20px;display:flex;align-items:center;justify-content:space-between;
+      font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-secondary);
+      z-index:100;backdrop-filter:blur(10px);
+    }
+    .status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--neon-green);margin-right:6px;box-shadow:0 0 6px var(--neon-green);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    .status-bar a{color:var(--neon-cyan);text-decoration:none}
+
+    .error-box{background:var(--bg-card);border:1px solid rgba(255,0,60,0.4);padding:40px;text-align:center;border-radius:4px}
+    .error-box .code{font-family:'Orbitron',sans-serif;color:var(--neon-red);font-size:1rem;margin-bottom:10px}
+
+    @media(max-width:900px){
+      main{padding:18px 14px 90px}
+      .player-stage{border-width:1px;border-radius:4px}
+    }
+    @media(max-width:640px){
+      .player-title{font-size:0.9rem}
+      .header-inner{flex-direction:column;align-items:flex-start}
+      main{padding:16px 12px 90px}
+      .logo{font-size:1.3rem}
+      .nav-back{padding:7px 12px;font-size:0.68rem}
+      .embed-tab{padding:7px 12px;font-size:0.65rem}
+      .tool-btn{padding:9px 12px;font-size:0.68rem}
+      .player-toolbar{gap:8px}
+      .status-bar{padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:0.56rem}
+      .status-bar-right{display:none}
+      .api-endpoint{font-size:0.7rem;overflow-x:auto}
+    }
+    @media(max-width:420px){
+      .tool-btn{flex:1 1 100%;text-align:center}
+      .section-title{font-size:0.85rem;letter-spacing:2px}
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="/">DONGWAL <span style="display:block;font-size:0.6rem;letter-spacing:5px;font-weight:400;-webkit-text-fill-color:var(--text-secondary);font-family:'Share Tech Mono',monospace">PLAYER MODULE</span></a>
+      <a class="nav-back" href="/">&lt;&lt; BACK TO DASHBOARD</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="player-title" id="player-title">ESTABLISHING NEURAL LINK...</div>
+    <div class="player-stage">
+      <div class="loading-screen" id="loading">LOADING STREAM SOURCE</div>
+      <iframe id="player-frame" style="display:none" frameborder="0" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe>
+      <video id="player-video" style="display:none" controls autoplay playsinline></video>
+      <div class="no-stream" id="no-stream" style="display:none">NO STREAM AVAILABLE<br><small>TRY ANOTHER SOURCE OR LATER</small></div>
+    </div>
+
+    <div class="embed-tabs" id="embed-tabs"></div>
+
+    <div class="player-toolbar">
+      <a class="tool-btn" id="btn-prev" style="display:none" href="#">&lt;&lt; PREV EP</a>
+      <a class="tool-btn" id="btn-series" style="display:none" href="#" target="_self">SERIES INFO</a>
+      <a class="tool-btn mag" id="btn-next" style="display:none" href="#">NEXT EP &gt;&gt;</a>
+      <button class="tool-btn grn" id="btn-newtab" onclick="openNewTab()">OPEN IN NEW TAB</button>
+    </div>
+
+    <div id="download-section"></div>
+  </main>
+
+  <div class="status-bar">
+    <div><span class="status-dot"></span>DONGWAL v<%= version %> // STREAM ONLINE</div>
+    <div class="status-bar-right">CODEC: <a href="/" id="slug-label">AUTO-DETECT</a></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script>
+    const slug = decodeURIComponent(<%- JSON.stringify(slug) %>);
+    const API = '';
+    const state = { embeds: [], current: 0, hls: null };
+
+    async function load() {
+      const loading = document.getElementById('loading');
+      loading.style.display = 'flex';
+      document.getElementById('player-frame').style.display = 'none';
+      document.getElementById('no-stream').style.display = 'none';
+      try {
+        const d = await fetch(API + '/episode/' + slug).then(r => r.json());
+        if (!d.status || !d.data) throw new Error('episode not found');
+        const ep = d.data;
+        state.embeds = (ep.embeds || []).filter(e => e.src);
+        document.title = (ep.title || 'DONGWAL PLAYER');
+        document.getElementById('player-title').textContent = ep.title || 'Episode';
+        document.getElementById('slug-label').textContent = slug;
+        renderTabs();
+        renderToolbar(ep);
+        renderDownload(ep.download);
+        saveHistory(ep);
+        switchEmbed(0);
+      } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('no-stream').style.display = 'flex';
+      }
+    }
+
+    function renderTabs() {
+      const el = document.getElementById('embed-tabs');
+      if (!state.embeds.length) { el.innerHTML = ''; return; }
+      el.innerHTML = state.embeds.map((e, i) =>
+        `<div class="embed-tab ${i===0?'active':''}" onclick="switchEmbed(${i})">${e.name || 'Source '+(i+1)}</div>`
+      ).join('');
+    }
+
+    function saveHistory(ep) {
+      const src = (state.embeds[0]?.src) || ep.embedSrc || null;
+      fetch(API + '/api/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slug,
+          title: ep.title || slug,
+          type: 'episode',
+          series_slug: ep.nav?.allEpisodes ? extractSlug(ep.nav.allEpisodes) : null,
+          episode: ep.episode || null,
+          image: ep.img || null,
+          source: src,
+        }),
+      }).catch(() => {});
+    }
+
+    function switchEmbed(idx) {
+      if (!state.embeds[idx]) return;
+      state.current = idx;
+      const emb = state.embeds[idx];
+
+      stopHls();
+
+      const frame = document.getElementById('player-frame');
+      const video = document.getElementById('player-video');
+      const loading = document.getElementById('loading');
+      const noStream = document.getElementById('no-stream');
+
+      loading.style.display = 'flex';
+      noStream.style.display = 'none';
+      frame.style.display = 'none';
+      video.style.display = 'none';
+
+      if (emb.type === 'hls' || /\.m3u8($|\?)/.test(emb.src)) {
+        playHls(emb.src, video, loading);
+      } else {
+        frame.onload = () => { loading.style.display = 'none'; frame.style.display = 'block'; };
+        frame.onerror = () => { loading.style.display = 'none'; frame.style.display = 'block'; };
+        frame.src = emb.src;
+      }
+      document.querySelectorAll('#embed-tabs .embed-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    }
+
+    function playHls(src, video, loading) {
+      const proxyUrl = '/api/stream?url=' + encodeURIComponent(src);
+      const fail = () => { loading.style.display = 'none'; video.style.display = 'none'; document.getElementById('no-stream').style.display = 'flex'; };
+      if (window.Hls && Hls.isSupported()) {
+        state.hls = new Hls({ maxBufferLength: 30 });
+        state.hls.loadSource(proxyUrl);
+        state.hls.attachMedia(video);
+        state.hls.on(Hls.Events.MANIFEST_PARSED, (evt, data) => {
+          const levels = data.levels || [];
+          if (levels.length) {
+            const maxIdx = levels.length - 1;
+            state.hls.currentLevel = maxIdx;
+            state.hls.loadLevel = maxIdx;
+          }
+          loading.style.display = 'none';
+          video.style.display = 'block';
+          video.play().catch(() => {});
+        });
+        state.hls.on(Hls.Events.ERROR, (evt, data) => {
+          if (data.fatal) { console.error('[HLS]', data); state.hls.destroy(); state.hls = null; fail(); }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = proxyUrl;
+        video.addEventListener('loadedmetadata', () => { loading.style.display = 'none'; video.style.display = 'block'; video.play().catch(() => {}); });
+        video.addEventListener('error', fail);
+      } else {
+        fail();
+      }
+    }
+
+    function stopHls() {
+      if (state.hls) { try { state.hls.destroy(); } catch (e) {} state.hls = null; }
+      const video = document.getElementById('player-video');
+      if (video) { video.removeAttribute('src'); video.load(); }
+    }
+
+    function renderToolbar(ep) {
+      const prev = document.getElementById('btn-prev');
+      const next = document.getElementById('btn-next');
+      const series = document.getElementById('btn-series');
+      if (ep.nav?.prev) { prev.href = '/play/' + extractSlug(ep.nav.prev); prev.style.display = ''; }
+      if (ep.nav?.next) { next.href = '/play/' + extractSlug(ep.nav.next); next.style.display = ''; }
+      if (ep.nav?.allEpisodes) {
+        series.href = '/?detail=' + extractSlug(ep.nav.allEpisodes);
+        series.style.display = '';
+      }
+    }
+
+    function renderDownload(down) {
+      const el = document.getElementById('download-section');
+      if (!down || !down.length) { el.innerHTML = ''; return; }
+      el.innerHTML = `
+        <div class="section-title">Download Links</div>
+        ${down.map(d => `
+          <div class="api-endpoint">
+            <span class="method">[${d.quality || 'Q'}]</span>
+            ${(d.links||[]).map(l => `<a href="${l.href}" target="_blank" rel="noopener">${l.name}</a>`).join(' ')}
+          </div>
+        `).join('')}
+      `;
+    }
+
+    function extractSlug(href) {
+      if (!href) return '';
+      return href.replace(/^https?:\/\/[^/]+/, '').replace(/^\/+|\/+$/g, '');
+    }
+
+    function openNewTab() {
+      const src = state.embeds[state.current]?.src;
+      if (src) window.open(src, '_blank', 'noopener');
+    }
+
+    load();
+  </script>
+</body>
+</html>

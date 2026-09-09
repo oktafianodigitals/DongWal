@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+logs/
+server.log
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Database (riwayat tonton lokal - SQLite)
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite3-wal
+*.sqlite-shm
+*.sqlite3-shm
+*.sqlite-journal
+*.sqlite3-journal
+
+# Temp / test files
+_*.js
+
+# Cache / temp / OS
+.cache/
+tmp/
+temp/
+thumbs.db
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Stream proxy in-memory (jika pernah di-persist)
+.cache-stream/
