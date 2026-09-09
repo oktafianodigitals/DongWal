@@ -1,6 +1,6 @@
 {
   "name": "dongwal-api",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "DongWal - Multi-Source Anichin Scraper API with Cyber-edition Neon UI",
   "main": "app.js",
   "scripts": {

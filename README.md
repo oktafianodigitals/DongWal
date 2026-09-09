@@ -1,4 +1,4 @@
-# DONGWAL - CYBER-EDITION v2.0.2
+# DONGWAL - CYBER-EDITION v2.0.3
 
 > Multi-Source Anichin scraper API with cyberpunk neon-themed web UI.
 
@@ -133,6 +133,10 @@ DongWal/
 ## Perubahan v2.0.2 (Patch Fix)
 
 - **Remove Source Dropdown** - Dropdown filter sumber di search bar dihapus, search box langsung mencari ke semua sumber secara default
+
+## Perubahan v2.0.3 (Patch Fix)
+
+- **Clean Footer** - Informasi daftar source dihapus dari status bar bawah, menyisakan brand & build credit
 
 ## Konfigurasi
 
